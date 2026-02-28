@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ΕπιταγοΛήπτης">
+<title>ΕπιταγοΛήπτης – Daios Plastics</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0d0f0c;--surf:#161812;--card:#1c1e19;
+  --bdr:#2a2d24;--bdrL:#383c2e;
+  --gold:#d4a853;--goldD:#7a5f28;--goldBg:rgba(212,168,83,0.12);
+  --grn:#4caf82;--grnD:#1e5c3a;
+  --txt:#e8e6df;--txtD:#6e6e62;--txtM:#404038;
+  --red:#c95050;
+}
+html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Helvetica Neue',Arial,sans-serif;overscroll-behavior:none}
+input,button,select,textarea{font-family:inherit;-webkit-appearance:none;appearance:none;outline:none}
+input[type=file]{display:none}
+
+/* HEADER */
+.header{background:var(--surf);border-bottom:1px solid var(--bdr);padding:12px 14px 0;position:sticky;top:0;z-index:50}
+.header-row{display:flex;align-items:center;justify-content:space-between}
+.logo-wrap{display:flex;align-items:center;gap:9px}
+.logo-box{width:34px;height:34px;background:white;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-box img{width:100%;height:100%;object-fit:contain}
+.logo-text{font-family:Georgia,serif;font-size:17px;font-weight:700;color:var(--gold);line-height:1.1}
+.logo-sub{font-size:9px;color:var(--txtD);letter-spacing:1.5px;text-transform:uppercase}
+.badge{background:var(--goldBg);border:1px solid var(--goldD);color:var(--gold);font-size:10px;font-weight:600;padding:4px 10px;border-radius:20px;letter-spacing:.5px}
+.nav{display:flex;gap:2px;margin-top:10px}
+.nav-tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px 10px;cursor:pointer;border:none;border-bottom:2px solid transparent;font-size:11px;color:var(--txtM);font-weight:500;background:none;touch-action:manipulation}
+.nav-tab.active{border-bottom-color:var(--gold);color:var(--gold)}
+.nav-icon{font-size:17px}
+
+/* MAIN */
+.main{padding:14px 14px 80px;max-width:500px;margin:0 auto}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:16px;margin-bottom:12px}
+.card-title{font-family:Georgia,serif;font-size:16px;font-weight:600;color:#f5f2ea;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+
+/* UPLOAD */
+.upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+.upload-btn{padding:24px 10px;border-radius:11px;border:1.5px dashed var(--bdrL);background:var(--surf);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;color:var(--txt);font-size:13px;font-weight:600;touch-action:manipulation;width:100%}
+.upload-btn span{font-size:32px}
+.preview-img{width:100%;border-radius:9px;max-height:160px;object-fit:cover;margin-bottom:4px;border:1px solid var(--bdrL);display:block}
+
+/* BUTTONS */
+.btn{width:100%;padding:13px 16px;border-radius:11px;border:none;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:9px;touch-action:manipulation}
+.btn-ai{background:linear-gradient(135deg,var(--gold),#9a6e1e);color:#0d0f0c}
+.btn-ai:disabled{opacity:.4}
+.btn-green{background:var(--grnD);color:#b8f0d4;border:1px solid var(--grn)}
+.btn-ghost{background:transparent;color:var(--txtD);border:1px solid var(--bdrL)}
+.btn-red{background:transparent;color:var(--red);border:1px solid rgba(201,80,80,.3);padding:10px 16px}
+
+/* FORM */
+.field{margin-bottom:11px}
+.label{display:block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:var(--txtM);margin-bottom:5px}
+.input{width:100%;background:var(--surf);border:1px solid var(--bdrL);border-radius:9px;padding:12px;font-size:16px;color:var(--txt)}
+.input-ai{border-color:var(--grnD);color:#bfeed5}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.divider{display:flex;align-items:center;gap:8px;margin:6px 0 11px;font-size:10px;color:var(--txtM);text-transform:uppercase;letter-spacing:1px}
+.divider-line{flex:1;height:1px;background:var(--bdr)}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.pill-ai{background:rgba(76,175,130,.12);color:var(--grn);border:1px solid var(--grnD)}
+.pill-manual{background:rgba(212,168,83,.1);color:var(--goldD);border:1px solid var(--goldD)}
+
+/* LOADER */
+.loader{display:flex;flex-direction:column;align-items:center;padding:28px 14px;gap:12px}
+.loader-ring{width:44px;height:44px;border:3px solid var(--bdr);border-top-color:var(--gold);border-radius:50%;animation:spin .75s linear infinite}
+.loader-text{font-size:13px;color:var(--txtD);text-align:center}
+.loader-sub{font-size:11px;color:var(--txtM)}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* RECEIPT CARD */
+.receipt-wrap{border-radius:10px;overflow:hidden;border:1px solid var(--bdrL);margin-bottom:14px}
+
+/* SHARE */
+.share-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px}
+.share-btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 6px;border-radius:10px;border:1px solid transparent;background:var(--surf);font-size:12px;font-weight:600;cursor:pointer;touch-action:manipulation;width:100%}
+
+/* HISTORY */
+.hist-item{background:var(--card);border:1px solid var(--bdr);border-radius:13px;padding:12px 14px;margin-bottom:9px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.hist-icon{width:40px;height:40px;background:var(--goldBg);border:1px solid var(--goldD);border-radius:9px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hist-icon img{width:100%;height:100%;object-fit:contain}
+.hist-meta{flex:1;min-width:0}
+.hist-name{font-size:14px;font-weight:600;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hist-sub{font-size:11px;color:var(--txtD);margin-top:2px}
+.hist-amt{font-family:Georgia,serif;font-size:19px;font-weight:700;color:var(--grn);flex-shrink:0}
+.empty{text-align:center;padding:50px 20px;color:var(--txtM)}
+.empty-icon{font-size:50px;margin-bottom:14px;opacity:.4}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;display:flex;align-items:flex-end;justify-content:center}
+.modal-box{background:var(--card);border:1px solid var(--bdrL);border-radius:20px 20px 0 0;width:100%;max-width:500px;padding:8px 14px 30px;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.modal-handle{width:36px;height:4px;background:var(--bdrL);border-radius:2px;margin:10px auto 14px}
+
+/* RECEIPT DOC */
+.rdoc{background:#faf8f2;font-family:Arial,sans-serif;color:#1a1812;font-size:13px}
+.rdoc-hd{background:#1a1812;padding:16px 16px 10px}
+.rdoc-hd-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.rdoc-logo{width:48px;height:48px;background:white;border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rdoc-logo img{max-width:100%;max-height:100%;object-fit:contain}
+.rdoc-co{font-family:Georgia,serif;font-size:15px;color:#d4a853;font-weight:700}
+.rdoc-afm{font-size:9px;color:rgba(212,168,83,.5);letter-spacing:2px;text-transform:uppercase}
+.rdoc-title{text-align:center;font-family:Georgia,serif;font-size:17px;color:#d4a853;font-weight:700;letter-spacing:1px}
+.rdoc-sub{text-align:center;font-size:9px;color:rgba(212,168,83,.4);letter-spacing:2px;margin-top:2px}
+.rdoc-meta{display:flex;justify-content:space-between;padding:8px 16px;background:#f0ece0;font-size:11px;color:#7a7060}
+.rdoc-amt-box{background:#1a1812;padding:16px;text-align:center}
+.rdoc-amt-lbl{font-size:9px;color:rgba(212,168,83,.5);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px}
+.rdoc-amt-val{font-family:Georgia,serif;font-size:34px;color:#d4a853;font-weight:700;line-height:1}
+.rdoc-amt-w{font-size:10px;color:rgba(212,168,83,.4);margin-top:4px;font-style:italic}
+.rdoc-rows{padding:12px 16px 0}
+.rdoc-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #e8e2d0;gap:8px}
+.rdoc-rk{font-size:9px;color:#9a9080;text-transform:uppercase;letter-spacing:.8px;flex-shrink:0;padding-top:2px}
+.rdoc-rv{font-size:12px;font-weight:600;text-align:right;color:#1a1812}
+.rdoc-ft{margin:12px 16px 0;padding-top:10px;border-top:1.5px dashed #ccc8b8;display:flex;justify-content:space-between;align-items:flex-end}
+.rdoc-fl{font-size:10px;color:#9a9080;line-height:1.7}
+.rdoc-fr{text-align:right}
+.rdoc-stamp{display:inline-block;border:2px solid rgba(76,175,130,.7);color:#4caf82;font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+.rdoc-sig-lbl{font-size:9px;color:#9a9080;text-transform:uppercase;letter-spacing:1px}
+.rdoc-sig-name{font-family:Georgia,serif;font-size:14px;color:#1a1812;font-weight:700}
+.rdoc-note{text-align:center;padding:10px 16px;font-size:9px;color:#b0a898;letter-spacing:.8px;margin-top:8px;border-top:1px solid #e8e2d0}
+
+/* TOAST */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--card);padding:11px 18px;border-radius:25px;font-size:13px;font-weight:500;opacity:0;transition:all .3s;z-index:999;white-space:nowrap;pointer-events:none;border:1px solid var(--bdrL)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast-green{border-color:var(--grnD);color:var(--grn)}
+.toast-gold{border-color:var(--goldD);color:var(--gold)}
+
+/* HIDDEN */
+.hidden{display:none!important}
+
+/* TABS */
+.tab-content{display:none}
+.tab-content.active{display:block}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-row">
+    <div class="logo-wrap">
+      <div class="logo-box"><img src="data:image/jpeg;base64,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" alt="Daios"></div>
+      <div>
+        <div class="logo-text">ΕπιταγοΛήπτης</div>
+        <div class="logo-sub">Daios Plastics SA</div>
+      </div>
+    </div>
+    <div class="badge">AI · PDF</div>
+  </div>
+  <div class="nav">
+    <button class="nav-tab active" onclick="switchTab('scan',this)"><span class="nav-icon">📷</span>Σάρωση</button>
+    <button class="nav-tab" onclick="switchTab('history',this)"><span class="nav-icon">📋</span>Ιστορικό</button>
+    <button class="nav-tab" onclick="switchTab('settings',this)"><span class="nav-icon">⚙️</span>Ρυθμίσεις</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- ══ SCAN TAB ══ -->
+  <div id="tab-scan" class="tab-content active">
+
+    <!-- STEP: UPLOAD -->
+    <div id="step-upload" class="card">
+      <div class="card-title">📷 Φωτογραφία Επιταγής</div>
+      <!-- ΚΡΙΣΙΜΟ: Ξεχωριστά inputs, χωρίς overlay — μόνο έτσι δουλεύει στο iPhone Safari -->
+      <input type="file" id="inp-cam" accept="image/*" capture="environment" onchange="handleFile(this)">
+      <input type="file" id="inp-gal" accept="image/*" onchange="handleFile(this)">
+      <div class="upload-grid">
+        <button class="upload-btn" onclick="document.getElementById('inp-cam').value='';document.getElementById('inp-cam').click()">
+          <span>📷</span>Κάμερα
+        </button>
+        <button class="upload-btn" onclick="document.getElementById('inp-gal').value='';document.getElementById('inp-gal').click()">
+          <span>🖼️</span>Γκαλερί
+        </button>
+      </div>
+      <img id="preview-img" class="preview-img hidden" alt="preview">
+      <button id="btn-analyze" class="btn btn-ai" style="opacity:.4" disabled onclick="analyzeImage()">✨ Ανάγνωση με AI</button>
+      <button class="btn btn-ghost" onclick="skipAI()">✏️ Χειροκίνητη συμπλήρωση</button>
+    </div>
+
+    <!-- STEP: LOADING -->
+    <div id="step-loading" class="card hidden">
+      <div class="loader">
+        <div class="loader-ring"></div>
+        <div class="loader-text">Διαβάζω την επιταγή…<br><span class="loader-sub">Αναγνώριση ποσού, ημερομηνίας, τράπεζας</span></div>
+      </div>
+    </div>
+
+    <!-- STEP: FORM -->
+    <div id="step-form" class="card hidden">
+      <div class="card-title">
+        📝 Στοιχεία Επιταγής
+        <span id="ai-pill" class="pill pill-ai">✦ AI</span>
+      </div>
+
+      <div class="divider"><div class="divider-line"></div>Εκδότης<div class="divider-line"></div></div>
+      <div class="field">
+        <label class="label">Ονοματεπώνυμο / Εταιρεία Πελάτη</label>
+        <input type="text" id="f-issuer" class="input" placeholder="π.χ. Γεώργιος Παπαδόπουλος">
+      </div>
+
+      <div class="divider"><div class="divider-line"></div>Στοιχεία Επιταγής<div class="divider-line"></div></div>
+      <div class="grid2">
+        <div class="field">
+          <label class="label">Ποσό (€)</label>
+          <input type="number" inputmode="decimal" id="f-amount" class="input" placeholder="0.00">
+        </div>
+        <div class="field">
+          <label class="label">Ημερομηνία</label>
+          <input type="date" id="f-date" class="input">
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Τράπεζα</label>
+        <input type="text" id="f-bank" class="input" placeholder="π.χ. Alpha Bank">
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label class="label">Αρ. Επιταγής</label>
+          <input type="text" id="f-checknum" class="input" placeholder="00123456">
+        </div>
+        <div class="field">
+          <label class="label">IBAN</label>
+          <input type="text" id="f-iban" class="input" placeholder="GR…">
+        </div>
+      </div>
+
+      <div class="divider"><div class="divider-line"></div>Λεπτομέρειες<div class="divider-line"></div></div>
+      <div class="field">
+        <label class="label">Αιτιολογία</label>
+        <input type="text" id="f-reason" class="input" placeholder="π.χ. Πληρωμή τιμολογίου #001">
+      </div>
+      <div class="field">
+        <label class="label">Παραλήπτης</label>
+        <input type="text" id="f-recipient" class="input" value="Daios Plastics SA">
+      </div>
+
+      <button class="btn btn-green" onclick="generateReceipt()">📄 Δημιουργία Απόδειξης</button>
+      <button class="btn btn-ghost" onclick="resetScan()">↩ Νέα Επιταγή</button>
+    </div>
+
+    <!-- STEP: RECEIPT -->
+    <div id="step-receipt" class="card hidden">
+      <div class="card-title">✅ Απόδειξη Παραλαβής</div>
+      <div class="receipt-wrap" id="receipt-preview"></div>
+      <div class="share-grid">
+        <button class="share-btn" style="color:#d4a853;border-color:rgba(212,168,83,.3)" onclick="doPrint()">📥 PDF</button>
+        <button class="share-btn" style="color:#6aa3e8;border-color:rgba(106,163,232,.3)" onclick="doEmail()">📧 Email</button>
+        <button class="share-btn" style="color:#25d366;border-color:rgba(37,211,102,.3)" onclick="doWA()">💬 WhatsApp</button>
+        <button class="share-btn" style="color:#9f7aea;border-color:rgba(159,122,234,.3)" onclick="doViber()">📲 Viber</button>
+      </div>
+      <button class="btn btn-ghost" onclick="resetScan()">✦ Νέα Επιταγή</button>
+    </div>
+
+  </div><!-- /tab-scan -->
+
+  <!-- ══ HISTORY TAB ══ -->
+  <div id="tab-history" class="tab-content">
+    <div id="hist-empty" class="empty">
+      <div class="empty-icon">📭</div>
+      <div style="font-size:13px;line-height:1.6">Δεν υπάρχουν αποθηκευμένες<br>αποδείξεις ακόμα.</div>
+    </div>
+    <div id="hist-list"></div>
+  </div>
+
+  <!-- ══ SETTINGS TAB ══ -->
+  <div id="tab-settings" class="tab-content">
+    <div class="card">
+      <div class="card-title">🏢 Στοιχεία Επιχείρησης</div>
+      <div class="field"><label class="label">ΑΦΜ</label><input type="text" inputmode="numeric" id="s-afm" class="input" placeholder="123456789" oninput="saveSett()"></div>
+      <div class="field"><label class="label">Διεύθυνση</label><input type="text" id="s-addr" class="input" placeholder="Οδός Αριθμός, Πόλη" oninput="saveSett()"></div>
+      <div class="field"><label class="label">Τηλέφωνο</label><input type="tel" id="s-tel" class="input" placeholder="210 000 0000" oninput="saveSett()"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">🗑️ Δεδομένα</div>
+      <p style="font-size:13px;color:var(--txtD);margin-bottom:10px;line-height:1.6">Τα δεδομένα αποθηκεύονται τοπικά στη συσκευή σου.</p>
+      <button class="btn btn-red" onclick="clearHistory()">🗑️ Διαγραφή ιστορικού</button>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- MODAL -->
+<div id="modal" class="modal-overlay hidden" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-handle"></div>
+    <div class="receipt-wrap" id="modal-preview"></div>
+    <div class="share-grid" id="modal-share"></div>
+    <button class="btn btn-ghost" onclick="closeModal()">Κλείσιμο</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<script>
+const LOGO = "data:image/jpeg;base64,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";
+
+// ── State ──
+let imgB64 = null;
+let currentData = null;
+let currentModalData = null;
+let receipts = [];
+let settings = {};
+let toastTimer = null;
+
+// ── Init ──
+(function init(){
+  try{ receipts = JSON.parse(localStorage.getItem('dp_receipts')||'[]'); }catch{}
+  try{ settings = JSON.parse(localStorage.getItem('dp_settings')||'{}'); }catch{}
+  loadSettings();
+  renderHistory();
+  // Set today's date
+  document.getElementById('f-date').value = today();
+})();
+
+function today(){
+  return new Date().toISOString().split('T')[0];
+}
+
+// ── Tab switching ──
+function switchTab(id, btn){
+  document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+  if(id==='history') renderHistory();
+}
+
+// ── File handling ──
+function handleFile(input){
+  const file = input.files && input.files[0];
+  if(!file) return;
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = function(){
+    const mw=1000, mh=1000;
+    let w=img.naturalWidth, h=img.naturalHeight;
+    if(w>mw||h>mh){const r=Math.min(mw/w,mh/h);w=Math.round(w*r);h=Math.round(h*r);}
+    const cv = document.createElement('canvas');
+    cv.width=w; cv.height=h;
+    cv.getContext('2d').drawImage(img,0,0,w,h);
+    imgB64 = cv.toDataURL('image/jpeg',0.78).split(',')[1];
+    URL.revokeObjectURL(url);
+    // Show preview
+    const prev = document.getElementById('preview-img');
+    prev.src = 'data:image/jpeg;base64,'+imgB64;
+    prev.classList.remove('hidden');
+    // Enable AI button
+    const btn = document.getElementById('btn-analyze');
+    btn.disabled = false;
+    btn.style.opacity = '1';
+  };
+  img.src = url;
+}
+
+// ── AI Analysis ──
+async function analyzeImage(){
+  if(!imgB64) return;
+  showStep('loading');
+  try{
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:400,
+        messages:[{role:'user',content:[
+          {type:'image',source:{type:'base64',media_type:'image/jpeg',data:imgB64}},
+          {type:'text',text:'Επιταγή. Μόνο JSON:\n{"issuer":null,"amount":null,"date":null,"bank":null,"checkNumber":null,"iban":null}\ndate=YYYY-MM-DD, amount=αριθμός, null αν δεν υπάρχει.'}
+        ]}]
+      })
+    });
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const data = await res.json();
+    const raw = (data.content&&data.content[0]&&data.content[0].text||'{}').replace(/```[a-z]*\n?/gi,'').trim();
+    let p = {};
+    try{ p=JSON.parse(raw); }catch{}
+    // Fill form
+    if(p.issuer) setField('f-issuer', p.issuer, true);
+    if(p.amount) setField('f-amount', p.amount, true);
+    if(p.date) setField('f-date', p.date, true);
+    if(p.bank) setField('f-bank', p.bank, true);
+    if(p.checkNumber) setField('f-checknum', p.checkNumber, true);
+    if(p.iban) setField('f-iban', p.iban, true);
+    document.getElementById('f-recipient').value = settings.bizName||'Daios Plastics SA';
+    setPill(true);
+    showStep('form');
+    toast('✨ Η AI διάβασε την επιταγή!','gold');
+  }catch(err){
+    document.getElementById('f-date').value = today();
+    document.getElementById('f-recipient').value = settings.bizName||'Daios Plastics SA';
+    setPill(false);
+    showStep('form');
+    toast('⚠️ Σφάλμα AI – συμπλήρωσε χειροκίνητα');
+  }
+}
+
+function skipAI(){
+  document.getElementById('f-date').value = today();
+  document.getElementById('f-recipient').value = settings.bizName||'Daios Plastics SA';
+  setPill(false);
+  showStep('form');
+}
+
+function setField(id, val, highlight){
+  const el = document.getElementById(id);
+  el.value = val;
+  if(highlight){ el.classList.add('input-ai'); }
+}
+
+function setPill(isAI){
+  const p = document.getElementById('ai-pill');
+  if(isAI){
+    p.className='pill pill-ai'; p.textContent='✦ AI';
+  }else{
+    p.className='pill pill-manual'; p.textContent='✏️ Χειροκίνητα';
+  }
+}
+
+// ── Generate Receipt ──
+function generateReceipt(){
+  const amount = parseFloat(document.getElementById('f-amount').value);
+  if(!amount){ toast('⚠️ Συμπλήρωσε το ποσό!'); return; }
+  const d = {
+    id: Date.now(),
+    receiptNum: 'ΑΠ-'+String(Date.now()).slice(-6),
+    issuer: document.getElementById('f-issuer').value||'—',
+    amount: amount,
+    date: document.getElementById('f-date').value,
+    bank: document.getElementById('f-bank').value||'—',
+    checkNumber: document.getElementById('f-checknum').value||'—',
+    iban: document.getElementById('f-iban').value||'',
+    recipient: document.getElementById('f-recipient').value||'Daios Plastics SA',
+    reason: document.getElementById('f-reason').value||'—',
+    createdAt: new Date().toISOString(),
+    afm: settings.bizAfm||'',
+    addr: settings.bizAddr||'',
+    tel: settings.bizTel||'',
+  };
+  currentData = d;
+  receipts.unshift(d);
+  if(receipts.length>100) receipts.pop();
+  try{ localStorage.setItem('dp_receipts', JSON.stringify(receipts)); }catch{}
+  document.getElementById('receipt-preview').innerHTML = buildReceiptHTML(d);
+  showStep('receipt');
+  toast('✅ Απόδειξη αποθηκεύτηκε!','green');
+}
+
+function resetScan(){
+  imgB64 = null; currentData = null;
+  document.getElementById('preview-img').classList.add('hidden');
+  document.getElementById('preview-img').src='';
+  const btn = document.getElementById('btn-analyze');
+  btn.disabled=true; btn.style.opacity='.4';
+  ['f-issuer','f-amount','f-bank','f-checknum','f-iban','f-reason'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.value=''; el.classList.remove('input-ai');
+  });
+  document.getElementById('f-date').value = today();
+  document.getElementById('f-recipient').value = settings.bizName||'Daios Plastics SA';
+  document.getElementById('inp-cam').value='';
+  document.getElementById('inp-gal').value='';
+  showStep('upload');
+}
+
+function showStep(step){
+  ['upload','loading','form','receipt'].forEach(s=>{
+    document.getElementById('step-'+s).classList.toggle('hidden', s!==step);
+  });
+}
+
+// ── Receipt HTML ──
+function fmtAmt(n){
+  return Number(n).toLocaleString('el-GR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function amtWords(n){
+  const e=Math.floor(Number(n)), c=Math.round((Number(n)-e)*100);
+  return e.toLocaleString('el-GR')+' ευρώ'+(c>0?' και '+c+' λεπτά':'');
+}
+
+function buildReceiptHTML(d){
+  const df = d.date ? new Date(d.date+'T12:00:00').toLocaleDateString('el-GR') : '—';
+  const cf = new Date(d.createdAt).toLocaleDateString('el-GR');
+  const rows = [
+    ['Εκδότης Επιταγής', d.issuer],
+    ['Τράπεζα', d.bank],
+    ['Αρ. Επιταγής', d.checkNumber],
+    ['Ημ/νία Επιταγής', df],
+    ...(d.iban?[['IBAN',d.iban]]:[]),
+    ['Αιτιολογία', d.reason],
+  ];
+  return `<div class="rdoc">
+    <div class="rdoc-hd">
+      <div class="rdoc-hd-row">
+        <div class="rdoc-logo"><img src="${LOGO}" alt="logo"></div>
+        <div>
+          <div class="rdoc-co">DAIOS PLASTICS SA</div>
+          ${d.afm?`<div class="rdoc-afm">ΑΦΜ: ${d.afm}</div>`:''}
+        </div>
+      </div>
+      <div class="rdoc-title">ΑΠΟΔΕΙΞΗ ΠΑΡΑΛΑΒΗΣ</div>
+      <div class="rdoc-sub">ΕΠΙΤΑΓΗΣ · RECEIPT OF CHEQUE</div>
+    </div>
+    <div class="rdoc-meta">
+      <div>Αρ. <strong style="color:#1a1812">${d.receiptNum}</strong></div>
+      <div>Ημ/νία: <strong style="color:#1a1812">${cf}</strong></div>
+    </div>
+    <div class="rdoc-amt-box">
+      <div class="rdoc-amt-lbl">Παρελήφθη Ποσό</div>
+      <div class="rdoc-amt-val">€ ${fmtAmt(d.amount)}</div>
+      <div class="rdoc-amt-w">${amtWords(d.amount)}</div>
+    </div>
+    <div class="rdoc-rows">
+      ${rows.map(([k,v])=>`<div class="rdoc-row"><span class="rdoc-rk">${k}</span><span class="rdoc-rv">${v||'—'}</span></div>`).join('')}
+    </div>
+    <div class="rdoc-ft">
+      <div class="rdoc-fl">${d.addr||''}${d.tel?'<br>Τηλ: '+d.tel:''}</div>
+      <div class="rdoc-fr">
+        <div class="rdoc-stamp">ΠΑΡΕΛΑΒΑ</div>
+        <div class="rdoc-sig-lbl">Ο/Η Παραλαβών</div>
+        <div class="rdoc-sig-name">${d.recipient}</div>
+      </div>
+    </div>
+    <div class="rdoc-note">Η απόδειξη εκδόθηκε ηλεκτρονικά.</div>
+  </div>`;
+}
+
+// ── Share ──
+function buildText(d){
+  const df = d.date?new Date(d.date+'T12:00:00').toLocaleDateString('el-GR'):'—';
+  return `📋 ΑΠΟΔΕΙΞΗ ΠΑΡΑΛΑΒΗΣ ΕΠΙΤΑΓΗΣ
+Αρ: ${d.receiptNum}
+Εκδότης: ${d.issuer}
+Ποσό: €${fmtAmt(d.amount)}
+Ημ/νία: ${df}
+Τράπεζα: ${d.bank}
+Αρ. Επιταγής: ${d.checkNumber}
+Αιτιολογία: ${d.reason}
+Παρέλαβε: ${d.recipient}`;
+}
+
+function getActiveData(){ return currentModalData||currentData; }
+
+function doPrint(d){
+  const data = d||getActiveData();
+  if(!data) return;
+  const df = data.date?new Date(data.date+'T12:00:00').toLocaleDateString('el-GR'):'—';
+  const cf = new Date(data.createdAt).toLocaleDateString('el-GR');
+  const win = window.open('','_blank');
+  if(!win){ toast('⚠️ Επέτρεψε τα pop-ups'); return; }
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Απόδειξη ${data.receiptNum}</title>
+  <style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;background:#fff}
+  .w{max-width:420px;margin:0 auto;background:#faf8f2}
+  .hd{background:#1a1812;padding:16px}
+  .lr{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .lb{width:46px;height:46px;background:white;border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .lb img{max-width:100%;max-height:100%;object-fit:contain}
+  .cn{font-family:Georgia,serif;font-size:15px;color:#d4a853;font-weight:700}
+  .rt{text-align:center;font-family:Georgia,serif;font-size:17px;color:#d4a853;font-weight:700;letter-spacing:1px;margin-top:4px}
+  .rs{text-align:center;font-size:9px;color:rgba(212,168,83,.4);letter-spacing:2px}
+  .mt{display:flex;justify-content:space-between;padding:8px 16px;background:#f0ece0;font-size:11px;color:#7a7060}
+  .ab{background:#1a1812;padding:16px;text-align:center}
+  .av{font-family:Georgia,serif;font-size:32px;color:#d4a853;font-weight:700}
+  .aw{font-size:10px;color:rgba(212,168,83,.4);font-style:italic;margin-top:4px}
+  .rws{padding:12px 16px 0}
+  .rw{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #e8e2d0;gap:8px}
+  .rk{font-size:9px;color:#9a9080;text-transform:uppercase;letter-spacing:.8px;flex-shrink:0}
+  .rv{font-size:12px;font-weight:600;text-align:right;color:#1a1812}
+  .ft{margin:12px 16px 0;padding-top:10px;border-top:1.5px dashed #ccc8b8;display:flex;justify-content:space-between;align-items:flex-end}
+  .fl{font-size:10px;color:#9a9080;line-height:1.7}
+  .st{display:inline-block;border:2px solid rgba(76,175,130,.7);color:#4caf82;font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+  .sn{font-family:Georgia,serif;font-size:14px;color:#1a1812;font-weight:700}
+  .nt{text-align:center;padding:10px 16px;font-size:9px;color:#b0a898;margin-top:8px;border-top:1px solid #e8e2d0}
+  .pb{display:block;max-width:420px;margin:14px auto;padding:13px;background:#1a1812;color:#d4a853;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer}
+  @media print{.pb{display:none}}</style></head>
+  <body><div class="w">
+  <div class="hd"><div class="lr"><div class="lb"><img src="${LOGO}" alt="logo"></div>
+  <div><div class="cn">DAIOS PLASTICS SA</div>${data.afm?'<div style="font-size:9px;color:rgba(212,168,83,.5);letter-spacing:2px">ΑΦΜ: '+data.afm+'</div>':''}</div></div>
+  <div class="rt">ΑΠΟΔΕΙΞΗ ΠΑΡΑΛΑΒΗΣ</div><div class="rs">ΕΠΙΤΑΓΗΣ · RECEIPT OF CHEQUE</div></div>
+  <div class="mt"><div>Αρ. <strong>${data.receiptNum}</strong></div><div>Ημ/νία: <strong>${cf}</strong></div></div>
+  <div class="ab"><div style="font-size:9px;color:rgba(212,168,83,.5);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">Παρελήφθη Ποσό</div>
+  <div class="av">€ ${fmtAmt(data.amount)}</div><div class="aw">${amtWords(data.amount)}</div></div>
+  <div class="rws">
+  <div class="rw"><span class="rk">Εκδότης</span><span class="rv">${data.issuer}</span></div>
+  <div class="rw"><span class="rk">Τράπεζα</span><span class="rv">${data.bank}</span></div>
+  <div class="rw"><span class="rk">Αρ. Επιταγής</span><span class="rv">${data.checkNumber}</span></div>
+  <div class="rw"><span class="rk">Ημ/νία Επιταγής</span><span class="rv">${df}</span></div>
+  ${data.iban?'<div class="rw"><span class="rk">IBAN</span><span class="rv">'+data.iban+'</span></div>':''}
+  <div class="rw"><span class="rk">Αιτιολογία</span><span class="rv">${data.reason}</span></div>
+  </div>
+  <div class="ft"><div class="fl">${data.addr||''}${data.tel?'<br>Τηλ: '+data.tel:''}</div>
+  <div style="text-align:right"><div class="st">ΠΑΡΕΛΑΒΑ</div>
+  <div style="font-size:9px;color:#9a9080;text-transform:uppercase;letter-spacing:1px">Ο/Η Παραλαβών</div>
+  <div class="sn">${data.recipient}</div></div></div>
+  <div class="nt">Η απόδειξη εκδόθηκε ηλεκτρονικά.</div>
+  </div>
+  <button class="pb" onclick="window.print()">🖨️ Εκτύπωση / Αποθήκευση PDF</button>
+  </body></html>`);
+  win.document.close();
+}
+
+function doEmail(d){
+  const data=d||getActiveData();
+  window.location.href=`mailto:?subject=${encodeURIComponent('Απόδειξη '+data.receiptNum+' – €'+fmtAmt(data.amount))}&body=${encodeURIComponent(buildText(data))}`;
+}
+function doWA(d){
+  const data=d||getActiveData();
+  window.open('https://wa.me/?text='+encodeURIComponent(buildText(data)),'_blank');
+}
+function doViber(d){
+  const data=d||getActiveData();
+  window.open('viber://forward?text='+encodeURIComponent(buildText(data)));
+}
+
+// ── History ──
+function renderHistory(){
+  const list = document.getElementById('hist-list');
+  const empty = document.getElementById('hist-empty');
+  if(!receipts.length){ list.innerHTML=''; empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+  list.innerHTML = receipts.map(r=>{
+    const df = r.date?new Date(r.date+'T12:00:00').toLocaleDateString('el-GR'):'—';
+    return `<div class="hist-item" onclick="openModal(${r.id})">
+      <div class="hist-icon"><img src="${LOGO}" alt=""></div>
+      <div class="hist-meta">
+        <div class="hist-name">${r.issuer}</div>
+        <div class="hist-sub">${r.bank} · ${df} · ${r.receiptNum}</div>
+      </div>
+      <div class="hist-amt">€${fmtAmt(r.amount)}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── Modal ──
+function openModal(id){
+  const r = receipts.find(x=>x.id===id);
+  if(!r) return;
+  currentModalData = r;
+  document.getElementById('modal-preview').innerHTML = buildReceiptHTML(r);
+  document.getElementById('modal-share').innerHTML = `
+    <button class="share-btn" style="color:#d4a853;border-color:rgba(212,168,83,.3)" onclick="doPrint()">📥 PDF</button>
+    <button class="share-btn" style="color:#6aa3e8;border-color:rgba(106,163,232,.3)" onclick="doEmail()">📧 Email</button>
+    <button class="share-btn" style="color:#25d366;border-color:rgba(37,211,102,.3)" onclick="doWA()">💬 WhatsApp</button>
+    <button class="share-btn" style="color:#9f7aea;border-color:rgba(159,122,234,.3)" onclick="doViber()">📲 Viber</button>`;
+  document.getElementById('modal').classList.remove('hidden');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('modal').classList.add('hidden');
+  document.body.style.overflow='';
+  currentModalData = null;
+}
+
+// ── Settings ──
+function loadSettings(){
+  if(settings.bizAfm) document.getElementById('s-afm').value=settings.bizAfm;
+  if(settings.bizAddr) document.getElementById('s-addr').value=settings.bizAddr;
+  if(settings.bizTel) document.getElementById('s-tel').value=settings.bizTel;
+}
+function saveSett(){
+  settings.bizAfm = document.getElementById('s-afm').value;
+  settings.bizAddr = document.getElementById('s-addr').value;
+  settings.bizTel = document.getElementById('s-tel').value;
+  try{ localStorage.setItem('dp_settings',JSON.stringify(settings)); }catch{}
+}
+function clearHistory(){
+  if(!confirm('Διαγραφή όλου του ιστορικού;')) return;
+  receipts=[];
+  try{ localStorage.removeItem('dp_receipts'); }catch{}
+  renderHistory();
+  toast('🗑️ Ιστορικό διαγράφηκε');
+}
+
+// ── Toast ──
+function toast(msg, type=''){
+  clearTimeout(toastTimer);
+  const el=document.getElementById('toast');
+  el.textContent=msg;
+  el.className='toast show'+(type?' toast-'+type:'');
+  toastTimer=setTimeout(()=>el.classList.remove('show'),3200);
+}
+</script>
+</body>
+</html>
